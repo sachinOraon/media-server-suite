@@ -1,7 +1,7 @@
 # Creates a media server suite using docker containers of
 # [portainer, qBittorrent, jellyfinn, sonarr, radarr, jackett, flaresolverr, h5ai]
 # if deployed on personal cloud server, then make sure to open following ports
-# tcp: 9000, 6881, 8090
+# tcp: 9000, 6881, 8000, 8010, 8020
 # udp: 6881
 # also make sure they don't conflict with other running services
 
@@ -15,6 +15,7 @@ services:
     restart: unless-stopped
     ports:
       - "9000:9000/tcp"
+      - "8000:8000/tcp"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./volumes/portainer:/data
@@ -30,12 +31,26 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Asia/Kolkata
-      - WEBPORT=8090
+      - WEBPORT=8010
     ports:
       - "6881:6881/tcp"
       - "6881:6881/udp"
-      - "8090:8090/tcp"
+      - "8010:8010/tcp"
     volumes:
       # /path/to/config and /path/to/downloads must be writeable with user ID #1000
       - ./volumes/qBittorrent:/config
       - ./downloads:/home/debian/Downloads
+
+  # h5ai is a modern file indexer for HTTP web servers with focus on your files
+  # taken from https://hub.docker.com/r/awesometic/h5ai
+  h5ai:
+    container_name: h5ai
+    image: awesometic/h5ai:latest
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Kolkata
+    ports:
+      - "8020:80/tcp"
+    volumes:
+      - ./volumes/h5ai:/config
+      - ./downloads:/h5ai
