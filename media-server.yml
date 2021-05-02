@@ -1,7 +1,7 @@
 # Creates a media server suite using docker containers of
 # [portainer, qBittorrent, jellyfinn, sonarr, radarr, jackett, flaresolverr, h5ai]
 # if deployed on personal cloud server, then make sure to open following ports
-# tcp: 9000, 6881, 8000, 8010, 8020, 8030
+# tcp: 9000, 6881, 8000, 8010, 8020, 8030, 8040
 # udp: 6881
 # also make sure they don't conflict with other running services
 
@@ -42,7 +42,7 @@ services:
       - ./downloads:/home/debian/Downloads
 
   # h5ai is a modern file indexer for HTTP web servers with focus on your files
-  # taken from https://hub.docker.com/r/awesometic/h5ai
+  # credit: https://hub.docker.com/r/awesometic/h5ai
   h5ai:
     container_name: h5ai
     image: awesometic/h5ai:latest
@@ -73,3 +73,16 @@ services:
     volumes:
       - ./volumes/jackett:/config
       - ./downloads:/downloads
+
+  # FlareSolverr is a proxy server to bypass Cloudflare protection
+  # credit: https://github.com/FlareSolverr/FlareSolverr
+  flaresolverr:
+    container_name: flaresolverr
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    restart: unless-stopped
+    environment:
+      - LOG_LEVEL=info
+      - LOG_HTML=false
+      - CAPTCHA_SOLVER=none
+    ports:
+      - "8040:8191/tcp"
