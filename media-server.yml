@@ -1,7 +1,7 @@
 # Creates a media server suite using docker containers of
 # [portainer, qBittorrent, jellyfinn, sonarr, radarr, jackett, flaresolverr, h5ai]
 # if deployed on personal cloud server, then make sure to open following ports
-# tcp: 9000, 6881, 8000, 8010, 8020, 8030, 8040, 8050, 8060
+# tcp: 9000, 6881, 8000, 8010, 8020, 8030, 8040, 8050, 8060, 8070
 # udp: 6881
 # also make sure they don't conflict with other running services
 
@@ -119,6 +119,23 @@ services:
       - "8060:7878/tcp"
     volumes:
       - ./volumes/radarr:/config
-      # give o+rw permissions to
+      # give o+rw permissions to ./downloads/movies
       - ./downloads/movies:/data/Movies
       - ./downloads:/data/downloads/torrents
+
+  # Jellyfin is a Free Software Media System that puts you in control of managing and streaming your media
+  # credit: https://jellyfin.org/docs/general/administration/installing.html#docker
+  jellyfinn:
+    container_name: jellyfinn
+    image: jellyfin/jellyfin:latest
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+    ports:
+      - "8070:8096/tcp"
+    volumes:
+      - ./volumes/jellyfinn/config:/config
+      - ./volumes/jellyfinn/cache:/cache
+      - ./downloads:/media
