@@ -1,14 +1,14 @@
 # Creates a media server suite using docker containers of
 # [portainer, qBittorrent, jellyfinn, sonarr, radarr, jackett, flaresolverr, h5ai]
 # if deployed on personal cloud server, then make sure to open following ports
-# tcp: 9000, 6881, 8000, 8010, 8020
+# tcp: 9000, 6881, 8000, 8010, 8020, 8030
 # udp: 6881
 # also make sure they don't conflict with other running services
 
 services:
 
   # portainer is an open source tool for managing containerized applications
-  # taken from https://documentation.portainer.io/v2.0/deploy/ceinstalldocker/
+  # credit: https://documentation.portainer.io/v2.0/deploy/ceinstalldocker/
   portainer:
     container_name: portainer
     image: portainer/portainer-ce
@@ -21,7 +21,7 @@ services:
       - ./volumes/portainer:/data
 
   # qBittorrent project aims to provide an open-source software alternative to µTorrent
-  # taken from https://gitlab.com/dedyms/qbittorrent-nox.git
+  # credit: https://gitlab.com/dedyms/qbittorrent-nox.git
   # default username: admin password: adminadmin
   qBittorrent:
     container_name: qBittorrent-nox
@@ -54,3 +54,22 @@ services:
     volumes:
       - ./volumes/h5ai:/config
       - ./downloads:/h5ai
+
+  # Jackett works as a proxy server: it translates queries from apps (Sonarr, Radarr, etc)
+  # into tracker-site-specific http queries, parses the html response, then sends results
+  # back to the requesting software
+  # credit: https://hub.docker.com/r/linuxserver/jackett
+  jackett:
+    container_name: jackett
+    image: ghcr.io/linuxserver/jackett:latest
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - AUTO_UPDATE=true #optional
+      - TZ=Asia/Kolkata
+    ports:
+      - "8030:9117/tcp"
+    volumes:
+      - ./volumes/jackett:/config
+      - ./downloads:/downloads
