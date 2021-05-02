@@ -1,7 +1,14 @@
-# Creates media server using docker containers of
-# portainer
+# Creates a media server suite using docker containers of
+# [portainer, qBittorrent, jellyfinn, sonarr, radarr, jackett, flaresolverr, h5ai]
+# if deployed on personal cloud server, then make sure to open following ports
+# tcp: 9000, 6881, 8090
+# udp: 6881
+# also make sure they don't conflict with other running services
 
 services:
+
+  # portainer is an open source tool for managing containerized applications
+  # taken from https://documentation.portainer.io/v2.0/deploy/ceinstalldocker/
   portainer:
     container_name: portainer
     image: portainer/portainer-ce
@@ -11,3 +18,24 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./volumes/portainer:/data
+
+  # qBittorrent project aims to provide an open-source software alternative to µTorrent
+  # taken from https://gitlab.com/dedyms/qbittorrent-nox.git
+  # default username: admin password: adminadmin
+  qBittorrent:
+    container_name: qBittorrent-nox
+    image: registry.gitlab.com/dedyms/qbittorrent-nox:latest
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Kolkata
+      - WEBPORT=8090
+    ports:
+      - "6881:6881/tcp"
+      - "6881:6881/udp"
+      - "8090:8090/tcp"
+    volumes:
+      # /path/to/config and /path/to/downloads must be writeable with user ID #1000
+      - ./volumes/qBittorrent:/config
+      - ./downloads:/home/debian/Downloads
