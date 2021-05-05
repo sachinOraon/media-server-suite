@@ -13,6 +13,9 @@ services:
     container_name: portainer
     image: portainer/portainer-ce
     restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
     ports:
       - "9000:9000/tcp"
       - "8000:8000/tcp"
@@ -41,19 +44,22 @@ services:
       - ./volumes/qBittorrent:/config
       - ./downloads:/home/debian/Downloads
 
-  # h5ai is a modern file indexer for HTTP web servers with focus on your files
-  # credit: https://hub.docker.com/r/awesometic/h5ai
-  h5ai:
-    container_name: h5ai
-    image: awesometic/h5ai:latest
+  # File Browser provides a file managing interface within a specified directory
+  # and it can be used to upload, delete, preview, rename and edit your files
+  # credit: https://filebrowser.org/installation#docker
+  # default user/password is admin/admin
+  filebrowser:
+    container_name: filebrowser
+    image: filebrowser/filebrowser
     restart: unless-stopped
     environment:
-      - TZ=Asia/Kolkata
+      - PUID=1000
+      - PGID=1000
     ports:
       - "8020:80/tcp"
     volumes:
-      - ./volumes/h5ai:/config
-      - ./downloads:/h5ai
+      - ./downloads:/srv
+      - ./volumes/filebrowser/filebrowser.db:/database.db
 
   # Jackett works as a proxy server: it translates queries from apps (Sonarr, Radarr, etc)
   # into tracker-site-specific http queries, parses the html response, then sends results

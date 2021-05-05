@@ -9,7 +9,7 @@ It's a combination of various applications to build a complete media server solu
 - `jellyfin` :  It is the volunteer-built media solution that puts _you_ in control of your media. Stream to any device from your own server, with no strings attached.
 - `jackett` :  It works as a proxy server: it translates queries from apps ([Sonarr](https://github.com/Sonarr/Sonarr), [Radarr](https://github.com/Radarr/Radarr), etc.) into tracker-site-specific http queries, parses the html response, then sends results back to the requesting software.
 - `flaresolverr` :  It is an addon for `jackett`. It is a proxy server to bypass Cloudflare protection.
-- `h5ai` :  It is a modern file indexer for HTTP web servers with focus on your files.
+- `filebrowser` :  It provides a file managing interface within a specified directory.
 ---
 ### Steps to setup
 1. Install `git`, `docker` and `docker-compose`.
@@ -27,7 +27,7 @@ If deployed on personal cloud server, then open the following ports. Also make s
 | --- | ----------- |
 | homepage | 8080 |
 | qBittorrent-nox | 8010 |
-| h5ai | 8020 |
+| filebrowser | 8020 |
 | jackett | 8030 |
 | flaresolverr | 8040 |
 | sonarr | 8050 |

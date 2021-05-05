@@ -59,7 +59,7 @@
               <li><a href="" class="jellyfin-link" target="_blank" referrerpolicy="same-origin">Jellyfin</a></li>
               <li><a href="" class="jackett-link" target="_blank" referrerpolicy="same-origin">Jackett</a></li>
               <li><a href="" class="flare-link" target="_blank" referrerpolicy="same-origin">FlareSolverr</a></li>
-              <li><a href="" class="h5ai-link" target="_blank" referrerpolicy="same-origin">h5ai</a></li>
+              <li><a href="" class="filebrowser-link" target="_blank" referrerpolicy="same-origin">Filebrowser</a></li>
             </ul>
           </li>
         </ul>
@@ -77,7 +77,7 @@
       <div class="carousel-item active">
         <div class="carousel-container">
           <h2 class="animate__animated animate__fadeInDown">Multimedia Server Suite</h2>
-          <p class="animate__animated fanimate__adeInUp">Welcome to your personal media server suite dashboard which is made to fulfill all your multimedia requirements stacked at one place. It comprises <strong>Sonarr</strong>, <strong>Radarr</strong>, <strong>Jellyfin</strong>, <strong>qBitorrent</strong>, <strong>Jackett</strong> and <strong>h5ai</strong> to provide you rich multimedia experience.</p>
+          <p class="animate__animated fanimate__adeInUp">Welcome to your personal media server suite dashboard which is made to fulfill all your multimedia requirements stacked at one place. It comprises <strong>Sonarr</strong>, <strong>Radarr</strong>, <strong>Jellyfin</strong>, <strong>qBitorrent</strong>, <strong>Jackett</strong> and <strong>filebrowser</strong> to provide you rich multimedia experience.</p>
           <a href="#about" class="btn-get-started animate__animated animate__fadeInUp scrollto">Read More</a>
         </div>
       </div>
@@ -198,8 +198,8 @@
           <div class="col-lg-4 col-md-6 mt-5">
             <div class="icon-box" data-aos="zoom-in-left" data-aos-delay="200">
               <div class="icon"><i class="bx bx-folder-open" style="color: #333333;"></i></div>
-              <h4 class="title"><a href="" class="h5ai-link" target="_blank" referrerpolicy="same-origin">h5ai</a></h4>
-              <p class="description">h5ai is a modern file indexer for HTTP web servers with focus on your files. Directories are displayed in a appealing way and browsing them is enhanced by different views, a breadcrumb and a tree overview.</p>
+              <h4 class="title"><a href="" class="filebrowser-link" target="_blank" referrerpolicy="same-origin">File Browser</a></h4>
+              <p class="description">File Browser provides a file managing interface within a specified directory and it can be used to upload, delete, preview, rename and edit your files.</p>
             </div>
           </div>
 
@@ -229,12 +229,16 @@
   <footer id="footer">
     <div class="container">
       <h3>Media Server</h3>
-      <p>Your own personal media server suite created with the help of open source applications.</p>
+      <p>Your own personal media server suite created with the help of open source applications</p>
       <div class="social-links">
-        <a href="https://github.com/Sonarr/Sonarr" target="_blank"><i class="bx bxs-movie-play"></i></a>
-        <a href="https://github.com/Radarr/Radarr" target="_blank"><i class="bx bx-play-circle"></i></a>
-        <a href="https://www.qbittorrent.org/" target="_blank"><i class="bx bxs-cloud-download"></i></a>
-        <a href="https://github.com/jellyfin" target="_blank"><i class="bx bxs-video"></i></a>
+        <a href="https://github.com/Sonarr/Sonarr" target="_blank"><i class="bx bx-play-circle"></i></a>
+        <a href="https://github.com/Radarr/Radarr" target="_blank"><i class="bx bxs-movie-play"></i></a>
+        <a href="https://www.qbittorrent.org/" target="_blank"><i class="bx bx-download"></i></a>
+        <a href="https://github.com/jellyfin" target="_blank"><i class="bx bxs-videos"></i></a>
+        <a href="https://www.portainer.io/" target="_blank"><i class="bx bx-coin-stack"></i></a>
+        <a href="https://github.com/Jackett/Jackett" target="_blank"><i class="bx bxs-t-shirt"></i></a>
+        <a href="https://github.com/FlareSolverr/FlareSolverr" target="_blank"><i class="bx bx-cloud-lightning"></i></a>
+        <a href="https://github.com/filebrowser/filebrowser" target="_blank"><i class="bx bx-folder-open"></i></a>
       </div>
       <div class="copyright">
         &copy; Copyright <strong><span>Sachin Oraon</span></strong>. All Rights Reserved
@@ -264,7 +268,7 @@
 
   <script type="text/javascript">
       $(document).ready(function(){
-          const apps=["portainer", "qbitt", "h5ai", "jackett", "flare", "sonarr", "radarr", "jellyfin"];
+          const apps=["portainer", "qbitt", "filebrowser", "jackett", "flare", "sonarr", "radarr", "jellyfin"];
           const ports=[9000, 8010, 8020, 8030, 8040, 8050, 8060, 8070];
           for(let i=0; i<apps.length; i++){
               let item="."+apps[i]+"-link";
