@@ -155,3 +155,18 @@ services:
       - "8080:80/tcp"
     volumes:
       - ./volumes/home-page:/usr/local/apache2/htdocs/
+
+  # With watchtower you can update the running version of your containerized app
+  # simply by pushing a new image to the Docker Hub or your own image registry
+  # credit: https://containrrr.dev/watchtower/
+  # default scanning interval is 24 hours
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Kolkata
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_REMOVE_VOLUMES=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

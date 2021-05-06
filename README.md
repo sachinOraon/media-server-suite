@@ -3,6 +3,7 @@ It's a combination of various applications to build a complete media server solu
 
 ### Following applications are included:
 - `portainer` : It is an open source tool for managing containerized applications.
+- `watchtower` : A process for automating Docker container base image updates.
 - `qBittorrent-nox` :  It aims to provide an open-source software alternative to µTorrent.
 - `sonarr` : It is a PVR for Usenet and BitTorrent users. It can monitor multiple RSS feeds for new episodes of your favorite shows and will grab, sort and rename them.
 - `radarr` :  It is a movie collection manager for Usenet and BitTorrent users.
