@@ -13,9 +13,6 @@ services:
     container_name: portainer
     image: portainer/portainer-ce
     restart: unless-stopped
-    environment:
-      - PUID=1000
-      - PGID=1000
     ports:
       - "9000:9000/tcp"
       - "8000:8000/tcp"
@@ -24,25 +21,24 @@ services:
       - ./volumes/portainer:/data
 
   # qBittorrent project aims to provide an open-source software alternative to µTorrent
-  # credit: https://gitlab.com/dedyms/qbittorrent-nox.git
+  # credit: https://hub.docker.com/r/linuxserver/qbittorrent
   # default username: admin password: adminadmin
-  qBittorrent:
-    container_name: qBittorrent-nox
-    image: registry.gitlab.com/dedyms/qbittorrent-nox:latest
+  qbittorrent:
+    container_name: qbittorrent
+    image: ghcr.io/linuxserver/qbittorrent:latest
     restart: unless-stopped
     environment:
       - PUID=1000
       - PGID=1000
       - TZ=Asia/Kolkata
-      - WEBPORT=8010
+      - WEBUI_PORT=8010
     ports:
       - "6881:6881/tcp"
       - "6881:6881/udp"
       - "8010:8010/tcp"
     volumes:
-      # /path/to/config and /path/to/downloads must be writeable with user ID #1000
-      - ./volumes/qBittorrent:/config
-      - ./downloads:/home/debian/Downloads
+      - ./volumes/qbittorrent/config:/config
+      - ./downloads:/downloads
 
   # File Browser provides a file managing interface within a specified directory
   # and it can be used to upload, delete, preview, rename and edit your files
