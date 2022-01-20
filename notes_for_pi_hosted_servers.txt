@@ -1,0 +1,120 @@
+# https://docs.linuxserver.io/faq#libseccomp
+
+mkdir -p /home/pi/docker/{portainer,qbittorrent,downloads,h5ai,filebrowser,ngrok}
+
+docker run -d \
+    --name portainer \
+    --label com.centurylinklabs.watchtower.enable=true \
+    --restart=unless-stopped \
+    -u $UID:$GID \
+    -p 8000:8000 -p 8010:9000 \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -v /home/pi/docker/portainer:/data \
+    portainer/portainer-ce:latest
+
+docker run -d \
+  --name=qbittorrent \
+  --label com.centurylinklabs.watchtower.enable=true \
+  -e PUID=$(id -u) \
+  -e PGID=$(id -g) \
+  -e TZ=Asia/Kolkata \
+  -e WEBUI_PORT=8080 \
+  -p 6881:6881 \
+  -p 6881:6881/udp \
+  -p 8020:8080 \
+  -v /home/pi/docker/qbittorrent:/config \
+  -v /home/pi/docker/downloads:/downloads \
+  --restart unless-stopped \
+  lscr.io/linuxserver/qbittorrent:latest
+
+docker run -d \
+  --name=h5ai \
+  --label com.centurylinklabs.watchtower.enable=true \
+  -p 8030:80 \
+  -v /home/pi/docker/downloads:/h5ai \
+  -v /home/pi/docker/h5ai:/config \
+  -e PUID=$(id -u) \
+  -e PGID=$(id -g) \
+  -e TZ=Asia/Kolkata \
+  --restart unless-stopped \
+  bin20088/h5ai:latest
+
+touch /home/pi/docker/filebrowser/filebrowser.db
+# https://github.com/filebrowser/filebrowser/blob/master/docker/root/defaults/settings.json
+# https://github.com/filebrowser/filebrowser/issues/534
+nano /home/pi/docker/filebrowser/settings.json
+{
+  "port": 80,
+  "baseURL": "",
+  "address": "",
+  "log": "stdout",
+  "database": "/database/filebrowser.db",
+  "root": "/srv",
+  "noauth": true
+}
+
+docker run -d \
+    --name=filebrowser \
+    --label com.centurylinklabs.watchtower.enable=true \
+    -v /home/pi/docker/downloads:/srv \
+    -v /home/pi/docker/filebrowser/filebrowser.db:/database/filebrowser.db \
+    -v /home/pi/docker/filebrowser/settings.json:/config/settings.json \
+    -e PUID=$(id -u) \
+    -e PGID=$(id -g) \
+    -p 8040:80 \
+    filebrowser/filebrowser:s6
+
+# ngrok configuration
+nano /home/pi/docker/ngrok/ngrok.yml
+
+authtoken: ABC1234
+region: in
+console_ui: false
+log_level: info
+log_format: logfmt
+log: stdout
+web_addr: localhost:4040
+tunnels:
+  portainer:
+    addr: 8010
+    bind_tls: false
+    inspect: false
+    proto: http
+  qbittorrent:
+    addr: 8020
+    bind_tls: false
+    inspect: false
+    proto: http
+  h5ai:
+    addr: 8030
+    bind_tls: false
+    inspect: false
+    proto: http
+  filebrowser:
+    addr: 8040
+    bind_tls: false
+    inspect: false
+    proto: http
+
+docker run -d \
+    --name=ngrok \
+    --restart=unless-stopped \
+    --net=host \
+    --label com.centurylinklabs.watchtower.enable=true \
+    -v /home/pi/docker/ngrok/ngrok.yml:/etc/ngrok.yml \
+    -e NGROK_CONFIG=/etc/ngrok.yml \
+    -u $UID:$GID \
+    ngrok/ngrok:alpine ngrok start --all
+
+docker run -d \
+    --name watchtower \
+    --restart=unless-stopped \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -e WATCHTOWER_CLEANUP=true \
+    -e WATCHTOWER_REMOVE_VOLUMES=true \
+    -e WATCHTOWER_INCLUDE_RESTARTING=true \
+    -e WATCHTOWER_INCLUDE_STOPPED=true \
+    -e WATCHTOWER_REVIVE_STOPPED=true \
+    -e WATCHTOWER_ROLLING_RESTART=true \
+    -e WATCHTOWER_LABEL_ENABLE=true \
+    containrrr/watchtower:latest
