@@ -104,7 +104,7 @@ docker run -d \
     -v /home/pi/docker/ngrok/ngrok.yml:/etc/ngrok.yml \
     -e NGROK_CONFIG=/etc/ngrok.yml \
     -u $UID:$GID \
-    ngrok/ngrok:alpine ngrok start --all
+    ngrok/ngrok:alpine start --all
 
 docker run -d \
     --name watchtower \
