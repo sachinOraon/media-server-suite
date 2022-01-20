@@ -118,3 +118,15 @@ docker run -d \
     -e WATCHTOWER_ROLLING_RESTART=true \
     -e WATCHTOWER_LABEL_ENABLE=true \
     containrrr/watchtower:latest
+
+# qbittorrent bot setup
+git clone -b dev https://github.com/sachinOraon/QBittorrentBot.git /home/pi/docker/qbit-bot
+cd /home/pi/docker/qbit-bot
+# edit the config.py
+docker build . -t qbit-bot
+docker run -d \
+    --name=qbit-bot \
+    --restart=unless-stopped \
+    --label com.centurylinklabs.watchtower.enable=false \
+    --net=host \
+    qbit-bot
