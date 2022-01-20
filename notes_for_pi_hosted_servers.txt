@@ -2,6 +2,7 @@
 
 mkdir -p /home/pi/docker/{portainer,qbittorrent,downloads,h5ai,filebrowser,ngrok}
 
+# run as root user
 docker run -d \
     --name portainer \
     --label com.centurylinklabs.watchtower.enable=true \
@@ -106,6 +107,7 @@ docker run -d \
     -u $UID:$GID \
     ngrok/ngrok:alpine start --all
 
+# run as root user
 docker run -d \
     --name watchtower \
     --restart=unless-stopped \
@@ -117,6 +119,7 @@ docker run -d \
     -e WATCHTOWER_REVIVE_STOPPED=true \
     -e WATCHTOWER_ROLLING_RESTART=true \
     -e WATCHTOWER_LABEL_ENABLE=true \
+    -u $UID:$GID \
     containrrr/watchtower:latest
 
 # qbittorrent bot setup
