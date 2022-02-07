@@ -135,3 +135,15 @@ docker run -d \
     --label com.centurylinklabs.watchtower.enable=false \
     --net=host \
     qbit-bot
+
+# noip dynamic update client setup
+# https://www.github.com/aanousakis/no-ip
+docker run -d \
+  --name=noip \
+  --restart=unless-stopped \
+  --label com.centurylinklabs.watchtower.enable=true \
+  -e USERNAME=NOIP_USER_NAME \
+  -e PASSWORD=NOIP_PASSWORD \
+  -e "DOMAINS=NOIP_HOSTNAME" \
+  -e INTERVAL=60 \
+  aanousakis/no-ip:latest
