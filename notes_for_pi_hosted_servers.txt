@@ -1,6 +1,6 @@
 # https://docs.linuxserver.io/faq#libseccomp
 
-mkdir -p /home/pi/docker/{portainer,qbittorrent,downloads,h5ai,filebrowser,ngrok}
+mkdir -p /home/pi/docker/{portainer,qbittorrent,downloads,h5ai,filebrowser,ngrok,qbot,duckdns}
 
 # run as root user
 docker run -d \
@@ -125,16 +125,43 @@ docker run -d \
 # qbittorrent bot setup
 # Login to qbittorrent web ui and go to tools -> options -> web ui
 # uncheck the option "Enable Host header validation"
-git clone -b dev https://github.com/sachinOraon/QBittorrentBot.git /home/pi/docker/qbit-bot
-cd /home/pi/docker/qbit-bot
+git clone -b dev https://github.com/sachinOraon/QBittorrentBot.git /home/pi/docker/qbot
+cd /home/pi/docker/qbot
 # edit the config.py
-docker build . -t qbit-bot
+docker build . -t qbot:latest
 docker run -d \
-    --name=qbit-bot \
+    --name=qbot \
     --restart=unless-stopped \
     --label com.centurylinklabs.watchtower.enable=false \
     --net=host \
-    qbit-bot
+    qbot:latest
+
+# alternate method
+# create Dockerfile
+nano /home/pi/docker/qbot/Dockerfile.new
+# paste following lines
+FROM python:3.9-buster
+COPY requirements.txt /usr/src/app/requirements.txt
+WORKDIR /usr/src/app
+RUN ["pip", "install", "--no-cache-dir", "-r", "requirements.txt"]
+ENTRYPOINT ["python", "-u", "main.py"]
+# build the image
+docker build -t qbot:base -f /home/pi/docker/qbot/Dockerfile.new
+# run the image
+docker run -d \
+    --name=qbot \
+    --restart=unless-stopped \
+    --label com.centurylinklabs.watchtower.enable=false \
+    --net=host \
+    -v /home/pi/docker/qbot:/usr/src/app \
+    -e qbIp=127.0.0.1 \
+    -e qbPort=PORT \
+    -e qbUser=admin \
+    -e qbPsw=adminadmin \
+    -e TG-KEY=BOT_TOKEN \
+    -e API-ID=TELEGRAM_API \
+    -e API-HASH=TELEGRAM_HASH \
+    qbot:base
 
 # noip dynamic update client setup
 # https://www.github.com/aanousakis/no-ip
@@ -147,3 +174,17 @@ docker run -d \
   -e "DOMAINS=NOIP_HOSTNAME" \
   -e INTERVAL=60 \
   aanousakis/no-ip:latest
+
+# duckdns
+docker run -d \
+  --name=duckdns \
+  -e PUID=$(id -u) \
+  -e PGID=$(id -g) \
+  -e TZ=Asia/Kolkata \
+  -e SUBDOMAINS=subdomain \
+  -e TOKEN=token \
+  -e LOG_FILE=true \
+  -v /home/pi/docker/duckdns:/config \
+  --restart unless-stopped \
+  --label com.centurylinklabs.watchtower.enable=true \
+  lscr.io/linuxserver/duckdns
