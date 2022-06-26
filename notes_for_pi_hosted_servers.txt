@@ -27,6 +27,9 @@ docker run -d \
   -v /home/pi/docker/downloads:/downloads \
   --restart unless-stopped \
   lscr.io/linuxserver/qbittorrent:latest
+# For fixing error: "Unauthorized"
+# https://github.com/guillaumedsde/alpine-qbittorrent-openvpn/issues/32
+# Delete container and redeploy
 
 docker run -d \
   --name=h5ai \
