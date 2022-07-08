@@ -2,6 +2,8 @@ from Container import container
 
 class Description:
     def __init__(self):
+        # Icons can be added from https://boxicons.com/
+        # Only 5 colors are available: green, yellow, cyan, blue, pink
         self.map = {
             container.h5ai: {
                 'desc': 'h5ai is a modern file indexer for HTTP web servers with focus on your files. Directories are displayed in a appealing way and browsing them is enhanced by different views, a breadcrumb and a tree overview.',
