@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>Dashboard</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,700,700i&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/animate.css/animate.min.css" rel="stylesheet">
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="assets/css/style.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Moderna - v4.8.0
+  * Template URL: https://bootstrapmade.com/free-bootstrap-template-corporate-moderna/
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+</head>
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top d-flex align-items-center header-transparent">
+    <div class="container d-flex justify-content-between align-items-center">
+
+      <div class="logo">
+        <h1 class="text-light"><a href="index.html"><span>PiBoard</span></a></h1>
+        <!-- Uncomment below if you prefer to use an image logo -->
+        <!-- <a href="index.html"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+      </div>
+
+    </div>
+  </header><!-- End Header -->
+
+  <!-- ======= Hero Section ======= -->
+  <section id="hero" class="d-flex justify-cntent-center align-items-center">
+    <div id="heroCarousel" class="container carousel carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+
+      <!-- Slide 1 -->
+      <div class="carousel-item active">
+        <div class="carousel-container">
+          <h2 class="animate__animated animate__fadeInDown">Welcome to <span>PiBoard</span></h2>
+          <p class="animate__animated animate__fadeInUp">Welcome to your personal media server suite dashboard which is made to fulfill all your multimedia requirements, stacked at one place.</p>
+
+        </div>
+      </div>
+
+    </div>
+  </section><!-- End Hero -->
+
+  <main id="main">
+
+    <!-- ======= Services Section ======= -->
+    <section class="services">
+      <div class="container">
+
+        <div class="row" id="service-tiles"></div>
+
+      </div>
+    </section><!-- End Services Section -->
+
+
+  </main><!-- End #main -->
+
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/purecounter/purecounter.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/jquery-3.6.0.min.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      PORT = 5000;
+      API_URL = 'http://'+window.location.hostname+':'+PORT+'/services/info';
+      $.ajax({
+        url: API_URL,
+        type: 'GET',
+        crossOrigin: true,
+        crossDomain: true,
+        dataType: 'json',
+        error: function(xhr, status, error){
+          var errorMessage = xhr.status + ': ' + xhr.statusText;
+          console.log(errorMessage);
+          $("#service-tiles").append('<div class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="fade-up"><div class="icon-box icon-box-pink"><div class="icon"><i class="bx bx-error"></i></div><h4 class="title">INTERNAL_SERVER_ERROR</h4><p class="description">Failed to connect: <b>'+API_URL+'</b></p></div></div>');
+        },
+        success: function(response){
+          console.log(response);
+          if (response.status == "SUCCESS") {
+            for(let i=0; i<response.services.length; i++){
+              $("#service-tiles").append('<div class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="fade-up"><a href="http://'+window.location.hostname+":"+response.services[i].port+'" target="_blank" referrerpolicy="same-origin"><div class="icon-box '+response.services[i].color+'"><div class="icon"><i class="bx '+response.services[i].icon+'"></i></div></a><h4 class="title"><a target="_blank" referrerpolicy="same-origin" href="http://'+window.location.hostname+":"+response.services[i].port+'">'+response.services[i].name+'</a></h4><p class="description">'+response.services[i].desc+'</p></div></div>');
+            }
+          }
+          if (response.status == "ERR") {
+            $("#service-tiles").append('<div class="col-md-6 col-lg-3 d-flex align-items-stretch" data-aos="fade-up"><div class="icon-box icon-box-pink"><div class="icon"><i class="bx bx-bug"></i></div><h4 class="title">INTERNAL_SERVER_ERROR</h4><p class="description">'+response.msg+'</p></div></div>');
+          }
+        }
+      });
+    });
+  </script>
+
+</body>
+
+</html>
