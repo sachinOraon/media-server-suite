@@ -22,6 +22,6 @@ It's a dashboard that displays the running docker containers in one place.
 
  6. Start the flask server using command `python3 api.py`
 
- 7. Open new terminal and start the apache server using command
+ 7. Open new terminal and navigate to `piboard/html` and start the apache server using command
     `sudo docker run -d --rm --name piboard -p 80:80 -v "$PWD":/usr/local/apache2/htdocs/ httpd:latest`
 
