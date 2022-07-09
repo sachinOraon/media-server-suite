@@ -56,6 +56,8 @@ class DockerContainer(Resource):
                 logging.error(f"Failed to execute inspect command for: {conmap[id]}")
             except json.JSONDecodeError as err:
                 logging.error(f"Failed to parse command output for: {conmap[id]}: {str(err)}")
+            except FileNotFoundError:
+                return {'status': 'ERR', 'msg': 'Unable to find and execute docker command'}
         if len(con_port) > 0:
             service_list = []
             for id in con_port:
