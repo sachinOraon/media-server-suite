@@ -37,8 +37,8 @@ docker run -d \
   -p 8030:80 \
   -v /home/pi/docker/downloads:/h5ai \
   -v /home/pi/docker/h5ai:/config \
-  -e PUID=$(id -u) \
-  -e PGID=$(id -g) \
+  -e PUID=$(id -u) `# must be non root user id`\
+  -e PGID=$(id -g) `# must be non root user id`\
   -e TZ=Asia/Kolkata \
   --restart unless-stopped \
   bin20088/h5ai:latest
@@ -71,6 +71,7 @@ docker run -d \
 # ngrok configuration
 nano /home/pi/docker/ngrok/ngrok.yml
 
+version: 2
 authtoken: ABC1234
 region: in
 console_ui: false
@@ -81,22 +82,26 @@ web_addr: localhost:4040
 tunnels:
   portainer:
     addr: 8010
-    bind_tls: false
+    schemes:
+      - http
     inspect: false
     proto: http
   qbittorrent:
     addr: 8020
-    bind_tls: false
+    schemes:
+      - http
     inspect: false
     proto: http
   h5ai:
     addr: 8030
-    bind_tls: false
+    schemes:
+      - http
     inspect: false
     proto: http
   filebrowser:
     addr: 8040
-    bind_tls: false
+    schemes:
+      - http
     inspect: false
     proto: http
 
