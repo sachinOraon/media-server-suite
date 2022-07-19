@@ -104,6 +104,10 @@ tunnels:
       - http
     inspect: false
     proto: http
+  ssh:
+    addr: 22
+    inspect: false
+    proto: tcp
 
 docker run -d \
     --name=ngrok \
