@@ -9,7 +9,7 @@ It's a dashboard that displays the running docker containers in one place.
     - `sudo -s`
     - `virtualenv envname`
     - `source envname/bin/activate`
-    - `pip3 install flask-restx flask-cors docker gunicorn`
+    - `pip3 install Werkzeug==2.1.2 flask-restx==0.5.1 flask-cors docker gunicorn==20.1.0`
 
  3. (Optional) Change the flask's default port number(5000) by modifying [this line](https://github.com/sachinOraon/media-server-suite/blob/23e75c96653928b2d4488c542ecfed8a48bc8335/piboard/api.py#L82) For example:
     `app.run(debug=True, host='0.0.0.0', port=8080)`
