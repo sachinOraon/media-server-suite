@@ -134,47 +134,6 @@ docker run -d \
     -u $UID:$GID \
     containrrr/watchtower:latest
 
-# qbittorrent bot setup
-# Login to qbittorrent web ui and go to tools -> options -> web ui
-# uncheck the option "Enable Host header validation"
-git clone -b dev https://github.com/sachinOraon/QBittorrentBot.git /home/pi/docker/qbot
-cd /home/pi/docker/qbot
-# edit the config.py
-docker build . -t qbot:latest
-docker run -d \
-    --name=qbot \
-    --restart=unless-stopped \
-    --label com.centurylinklabs.watchtower.enable=false \
-    --net=host \
-    qbot:latest
-
-# alternate method
-# create Dockerfile
-nano /home/pi/docker/qbot/Dockerfile.new
-# paste following lines
-FROM python:3.9-buster
-COPY requirements.txt /usr/src/app/requirements.txt
-WORKDIR /usr/src/app
-RUN ["pip", "install", "--no-cache-dir", "-r", "requirements.txt"]
-ENTRYPOINT ["python", "-u", "main.py"]
-# build the image
-docker build -t qbot:base -f /home/pi/docker/qbot/Dockerfile.new
-# run the image
-docker run -d \
-    --name=qbot \
-    --restart=unless-stopped \
-    --label com.centurylinklabs.watchtower.enable=false \
-    --net=host \
-    -v /home/pi/docker/qbot:/usr/src/app \
-    -e qbIp=127.0.0.1 \
-    -e qbPort=PORT \
-    -e qbUser=admin \
-    -e qbPsw=adminadmin \
-    -e TG-KEY=BOT_TOKEN \
-    -e API-ID=TELEGRAM_API \
-    -e API-HASH=TELEGRAM_HASH \
-    qbot:base
-
 # noip dynamic update client setup
 # https://www.github.com/aanousakis/no-ip
 docker run -d \
@@ -209,3 +168,16 @@ if [ -e $OUT_FILE ]; then rm $OUT_FILE; fi
 tracker_list=$(curl -Ns https://raw.githubusercontent.com/XIU2/TrackersListCollection/master/all.txt https://ngosang.github.io/trackerslist/trackers_all_http.txt https://newtrackon.com/api/all https://raw.githubusercontent.com/DeSireFire/animeTrackerList/master/AT_all.txt https://raw.githubusercontent.com/hezhijie0327/Trackerslist/main/trackerslist_tracker.txt https://raw.githubusercontent.com/hezhijie0327/Trackerslist/main/trackerslist_exclude.txt | awk '$0' | tr '\n\n' ',')
 qbit_tracker_list=$(for line in $(echo "$tracker_list" | tr ',' '\n'); do echo -n "$line\\\n"; done)
 echo "$qbit_tracker_list" > $OUT_FILE
+
+# to setup telebit using docker [https://git.coolaj86.com/coolaj86/telebit.js]
+1. Run a Debian container.
+   docker run --name debian -it debian:bullseye-slim
+2. Install systemd and curl inside the container.
+   apt-get update && apt-get install -y systemd curl
+3. Exit from the container and create a base image for telebit.
+   docker commit debian tele:base
+4. Create a container from this image to setup telebit [https://medium.com/swlh/docker-and-systemd-381dfd7e4628]
+   docker run -d --name telebit --net host --restart unless-stopped --privileged -v /sys/fs/cgroup/:/sys/fs/cgroup:ro --tmpfs /tmp --tmpfs /run --entrypoint /lib/systemd/systemd tele:base
+5. Install telebit inside the container.
+   docker exec -it telebit /bin/bash
+   curl -fsSL https://get.telebit.io | bash
